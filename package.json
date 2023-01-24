@@ -1,0 +1,23 @@
+{
+  "name": "team-profile-genterator",
+  "version": "1.0.0",
+  "description": "1. [Description](#description)\r 2. [Testing](#testing)\r 3. [Technology Used and Credits](#technology-used-and-credits)\r 4. [About the Author](#about-the-author)\r 5. [License](#license)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bradcoleman60/team-profile-genterator.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bradcoleman60/team-profile-genterator/issues"
+  },
+  "homepage": "https://github.com/bradcoleman60/team-profile-genterator#readme",
+  "dependencies": {
+    "inquirer": "^8.2.4",
+    "inquirer-loop": "^0.3.0"
+  }
+}
