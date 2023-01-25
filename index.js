@@ -4,9 +4,6 @@ const fs = require("fs");
 //This adds the inquire.js module to this script
 const inquirer = require("inquirer");
 
-//This adds the inquire prompt type of "loop"
-inquirer.registerPrompt("loop", require("inquirer-loop")(inquirer));
-
 //This adds link to components.js file
 // var cp = require("./components");
 
@@ -21,7 +18,7 @@ const managerQuestions = [
     message: "What is the manager's name?",
     validate(answer) {
       if (answer.length < 1) {
-        return `Please enter a valid title`;
+        return `Please enter a valid name`;
       }
       return true;
     },
@@ -32,11 +29,12 @@ const managerQuestions = [
     message: "What is the manager's ID",
     validate(answer) {
       if (answer.length < 1) {
-        return `Please enter a valid author`;
+        return `Please enter a valid ID`;
       }
       return true;
     },
   },
+  
   {
     type: "input",
     name: "managerEmail",
@@ -52,6 +50,22 @@ const managerQuestions = [
       return true;
     },
   },
+  {
+    type: "input",
+    name: "managerOfficeNum",
+    message: "What is the manager's Office Number?",
+    validate(answer) {
+      if (answer.length < 1) {
+        return `Please enter a valid office number`;
+      }
+      return true;
+    },
+  },
+  {
+    type: 'confirm',
+    name: 'enterEmployee',
+    message: 'Do you want to enter an employee profile now?'
+  }
 ];
 
 const employeeQuestions = [
@@ -59,73 +73,51 @@ const employeeQuestions = [
     type: "list",
     name: "engOrIntern",
     message: "Which type of employee do you want to enter?",
-    choices: ["Add an Engineer", "Add an Intern", "No, not at this time"],
-  },
-
-  //Engineer Questions
-  {
-    type: "input",
-    name: "engName",
-    message: "Please Engineer's Name:",
-    when: (answers) => answers.engOrIntern === "Add an Engineer",
+    choices: ["Engineer", "Intern"],
   },
   {
     type: "input",
-    name: "engID",
-    message: "Please Engineer's ID:",
-    when: (answers) => answers.engOrIntern === "Add an Engineer",
-  },
+    name: "employeeName",
+    message: "Please Employee's Name:",
+      },
   {
     type: "input",
-    name: "engEmail",
-    message: "Please Engineer's Email:",
-    when: (answers) => answers.engOrIntern === "Add an Engineer",
-  },
+    name: "employeeID",
+    message: "Please Employee's ID:",
+   },
   {
     type: "input",
-    name: "engGithub",
+    name: "employeeEmail",
+    message: "Please Employee's Email:",
+    
+    },
+  {
+    type: "input",
+    name: "Github",
     message: "Please Engineer's GitHub UserName:",
-    when: (answers) => answers.engOrIntern === "Add an Engineer",
+    when: (answers) => answers.engOrIntern === "Engineer",
   },
-  //Intern Questions
+  
   {
     type: "input",
-    name: "intName",
-    message: "Please Intern's Name:",
-    when: (answers) => answers.engOrIntern === "Add an Intern",
-  },
-  {
-    type: "input",
-    name: "intID",
-    message: "Please Intern's ID:",
-    when: (answers) => answers.engOrIntern === "Add an Intern",
-  },
-  {
-    type: "input",
-    name: "intEmail",
-    message: "Please Intern's Email:",
-    when: (answers) => answers.engOrIntern === "Add an Intern",
-  },
-  {
-    type: "input",
-    name: "engSchool",
+    name: "school",
     message: "Please Intern's School:",
-    when: (answers) => answers.engOrIntern === "Add an Intern",
+    when: (answers) => answers.engOrIntern === "Intern",
   },
   {
     type: 'confirm',
     name: 'enterAnother',
-    message: 'Do you want to add another employee?'
-  }
+    message: 'Do you want to add another employee?',
+    }
 ];
 
 function askManager() {
   inquirer.prompt(managerQuestions).then((answers) =>{
     output.push(answers);
+    if(answers.enterEmployee){
     askEmployee()
-     
-    
-  } )
+ } else (console.log(output)) 
+ } )
 }
 
 function askEmployee() {
@@ -134,11 +126,15 @@ function askEmployee() {
     if(answers.enterAnother){
       askEmployee()
     } else {output.join(', ')}
-    console.log(output) 
-  })
+    
+  }    ) 
 }
 
-askManager()
+
+
+
+
+askManager();
 
 //   //This logs the answers
 //   .then((answers) => {
