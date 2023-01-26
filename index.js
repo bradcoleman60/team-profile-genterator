@@ -4,57 +4,14 @@ const fs = require("fs");
 //This adds the inquire.js module to this script
 const inquirer = require("inquirer");
 
+//Require all supporting Javascript Files
+const Manager = require("./lib/manager");
+const Engineer = require("./lib/engineer");
+const Intern = require("./lib/intern");
+const Employee = require("./lib/employee");
+
 //This adds link to components.js file
 // var cp = require("./components");
-
-//This is the object of the questions that will be answered in the terminal
-
-// function Person (name, email,id){
-//   this.name = name,
-//   this.email = email,
-//   this.id = id
-// }
-
-// class Manager extends Person (officeNum){
-//   constructor(office){
-//     this.officeNum = office
-//   }
-// };
-
-// class Engineer extends Person (github){
-//   constructor(github){
-//     this.github = github
-//   }
-// };
-
-// class Intern extends Person (school){
-//   constructor(school){
-//     this.school = school
-//   }
-// };
-
-
-function Manager (name, email, id, office){
-  this.name = name,
-  this.email = email,
-  this.id = id,
-  this.officeNum = office
-  
-};
-function Engineer (name, email, id, github){
-  this.Name = name,
-  this.email = email,
-  this.id = id,
-  this.github = github
-  };
-function Intern (name, email, id, school ){
-  this.Name = name,
-  this.email = email,
-  this.id = id,
-  this.school = school
-};
-
-const output =[];
 
 const managerQuestions = [
   {
@@ -79,7 +36,7 @@ const managerQuestions = [
       return true;
     },
   },
-  
+
   {
     type: "input",
     name: "email",
@@ -107,10 +64,10 @@ const managerQuestions = [
     },
   },
   {
-    type: 'confirm',
-    name: 'enterEmployee',
-    message: 'Do you want to enter an employee profile now?'
-  }
+    type: "confirm",
+    name: "enterEmployee",
+    message: "Do you want to enter an employee profile now?",
+  },
 ];
 
 const employeeQuestions = [
@@ -124,25 +81,24 @@ const employeeQuestions = [
     type: "input",
     name: "Name",
     message: "Please Employee's Name:",
-      },
+  },
   {
     type: "input",
     name: "id",
     message: "Please Employee's ID:",
-   },
+  },
   {
     type: "input",
     name: "Email",
     message: "Please Employee's Email:",
-    
-    },
+  },
   {
     type: "input",
     name: "Github",
     message: "Please Engineer's GitHub UserName:",
     when: (answers) => answers.engOrIntern === "Engineer",
   },
-  
+
   {
     type: "input",
     name: "school",
@@ -150,49 +106,96 @@ const employeeQuestions = [
     when: (answers) => answers.engOrIntern === "Intern",
   },
   {
-    type: 'confirm',
-    name: 'enterAnother',
-    message: 'Do you want to add another employee?',
-    }
+    type: "confirm",
+    name: "enterAnother",
+    message: "Do you want to add another employee?",
+  },
 ];
 
 function askManager() {
-  inquirer.prompt(managerQuestions).then((answers) =>{
-    const manager = new Manager(answers.Name, answers.email, answers.id, answers.OfficeNum)
-    output.push(answers);
-    if(answers.enterEmployee){
-    askEmployee()
- } else (console.log(manager)) 
- } )
+  inquirer.prompt(managerQuestions).then((answers) => {
+    console.log(answers.Name);
+    console.log(Number(answers.id));
+    console.log(answers.email);
+    console.log(Number(answers.OfficeNum));
+
+    const manager = new Manager(
+      answers.Name,
+      Number(answers.id),
+      answers.email,
+      Number(answers.OfficeNum)
+    );
+    
+    if (answers.enterEmployee) {
+      askEmployee();
+    }
+  });
 }
 
 function askEmployee() {
-  inquirer.prompt(employeeQuestions).then((answers) =>{
-    if (answers.engOrIntern === 'Engineer'){
-      const engineer = new Engineer(answers.Name, answers.email, answers.id, answers.github);
-      
-    } else{
-      const intern = new Intern(answers.Name, answers.email, answers.id, answers.school);
-      
+  inquirer.prompt(employeeQuestions).then((answers) => {
+    console.log(answers.Name);
+    console.log(Number(answers.id));
+    console.log(answers.Email);
+    console.log(answers.Github);
+    console.log(answers.school);
+    if (answers.engOrIntern === "Engineer") {
+      const engineer = new Engineer(
+        answers.Name,
+        Number(answers.id),
+        answers.Email,
+        answers.Github
+      );
+    } else {
+      const intern = new Intern(
+        answers.Name,
+        Number(answers.id),
+        answers.Email,
+        answers.school
+      );
     }
-    askAgain(answers.enterAnother);
-    console.log(answers.enterAnother)
-    // output.push(answers);
-    // if(answers.enterAnother){
-    //   askEmployee()
-    // } else {output.join(', ')}
-    // console.log(intern)
-  }    ) 
+
+    if (answers.enterAnother) {
+      askAgain();
+    }
+    
+  });
 }
 
-function askAgain (enterAnother){
-  if(enterAnother = true){
-    askEmployee()
-  } else
-  {console.log(manager)}
+function askAgain(enterAnother) {
+  if (enterAnother === true) {
+    askEmployee();
+  } else {
+    console.log(Manager.name);
+    console.log(Engineer.name);
+    console.log(Intern.name);
+    console.log(Employee.email);
+  }
 }
 
 askManager();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //   //This logs the answers
@@ -254,8 +257,8 @@ askManager();
 //   testSteps,
 //   installString
 // ) {
-//   var theHtmlPage = `XXXXXXXXXXXXXX 
-  
+//   var theHtmlPage = `XXXXXXXXXXXXXX
+
 //   Please also check the GitHub Repositories at: https://github.com/${github}/`;
 
 //   writeReadme(theReadMe);

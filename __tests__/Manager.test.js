@@ -22,27 +22,27 @@ describe("Manager", () => {
 
         it("Should throw an error if provided a non string value for name", () =>{
             //Act
-            const cb1 = () => new Manager(987, 2584, "bradcoleman60@gmail.com", 59541);
+            const cb = () => new Manager(987, 2584, "bradcoleman60@gmail.com", 59541);
             const err = ("Expected parameter 'name' to be a non-empty string");
 
             //Verify that the correct error was thrown
-            expect(cb1).toThrowError(err)
+            expect(cb).toThrowError(err)
         })
         it("Should throw an error if provided a non number for id", () =>{
             //Act
-            const cb2 = () => new Manager("Brad", "not a number", "bradcoleman60@gmail.com", 85665);
-            const err2 = ("Expected parameter 'id' to be a number");
+            const cb = () => new Manager("Brad", "not a number", "bradcoleman60@gmail.com", 85665);
+            const err = ("Expected parameter 'id' to be a number");
 
             //Verify that the correct error was thrown
-            expect(cb2).toThrowError(err2)
+            expect(cb).toThrowError(err)
         })
         it("Should throw an error if provided a non email address for email", () =>{
             //Act
-            const cb3 = () => new Manager("Brad Coleman", 999 , "bradcoleman60", 9988);
-            const err3 = ("Expected parameter 'email expected to be an email address");
+            const cb = () => new Manager("Brad Coleman", 999 , "bradcoleman60", 9988);
+            const err = ("Expected parameter 'email expected to be an email address");
 
             //Verify that the correct error was thrown
-            expect(cb3).toThrowError(err3)
+            expect(cb).toThrowError(err)
         })
 
         it("should return officeNumber along with  employee name, email and id", () => {
@@ -66,8 +66,8 @@ describe("Manager", () => {
         })
         it("Should return role when getRole() function is called", () => {
             //Act
-            const cb1 = new Manager("Brad Coleman", 58644, "bradcoleman60@gmail.com", 85685);
-            expect(cb1.getRole()).toBe("Manager")
+            const cb = new Manager("Brad Coleman", 58644, "bradcoleman60@gmail.com", 85685);
+            expect(cb.getRole()).toBe("Manager")
         })
     })
 })
