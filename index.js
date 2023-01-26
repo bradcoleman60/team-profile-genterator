@@ -9,12 +9,57 @@ const inquirer = require("inquirer");
 
 //This is the object of the questions that will be answered in the terminal
 
+// function Person (name, email,id){
+//   this.name = name,
+//   this.email = email,
+//   this.id = id
+// }
+
+// class Manager extends Person (officeNum){
+//   constructor(office){
+//     this.officeNum = office
+//   }
+// };
+
+// class Engineer extends Person (github){
+//   constructor(github){
+//     this.github = github
+//   }
+// };
+
+// class Intern extends Person (school){
+//   constructor(school){
+//     this.school = school
+//   }
+// };
+
+
+function Manager (name, email, id, office){
+  this.name = name,
+  this.email = email,
+  this.id = id,
+  this.officeNum = office
+  
+};
+function Engineer (name, email, id, github){
+  this.Name = name,
+  this.email = email,
+  this.id = id,
+  this.github = github
+  };
+function Intern (name, email, id, school ){
+  this.Name = name,
+  this.email = email,
+  this.id = id,
+  this.school = school
+};
+
 const output =[];
 
 const managerQuestions = [
   {
     type: "input",
-    name: "managerName",
+    name: "Name",
     message: "What is the manager's name?",
     validate(answer) {
       if (answer.length < 1) {
@@ -25,7 +70,7 @@ const managerQuestions = [
   },
   {
     type: "input",
-    name: "managerID",
+    name: "id",
     message: "What is the manager's ID",
     validate(answer) {
       if (answer.length < 1) {
@@ -37,7 +82,7 @@ const managerQuestions = [
   
   {
     type: "input",
-    name: "managerEmail",
+    name: "email",
     message: "What is the manager's email address?",
     validate(answer) {
       if (
@@ -52,7 +97,7 @@ const managerQuestions = [
   },
   {
     type: "input",
-    name: "managerOfficeNum",
+    name: "OfficeNum",
     message: "What is the manager's Office Number?",
     validate(answer) {
       if (answer.length < 1) {
@@ -77,17 +122,17 @@ const employeeQuestions = [
   },
   {
     type: "input",
-    name: "employeeName",
+    name: "Name",
     message: "Please Employee's Name:",
       },
   {
     type: "input",
-    name: "employeeID",
+    name: "id",
     message: "Please Employee's ID:",
    },
   {
     type: "input",
-    name: "employeeEmail",
+    name: "Email",
     message: "Please Employee's Email:",
     
     },
@@ -113,28 +158,42 @@ const employeeQuestions = [
 
 function askManager() {
   inquirer.prompt(managerQuestions).then((answers) =>{
+    const manager = new Manager(answers.Name, answers.email, answers.id, answers.OfficeNum)
     output.push(answers);
     if(answers.enterEmployee){
     askEmployee()
- } else (console.log(output)) 
+ } else (console.log(manager)) 
  } )
 }
 
 function askEmployee() {
   inquirer.prompt(employeeQuestions).then((answers) =>{
-    output.push(answers);
-    if(answers.enterAnother){
-      askEmployee()
-    } else {output.join(', ')}
-    
+    if (answers.engOrIntern === 'Engineer'){
+      const engineer = new Engineer(answers.Name, answers.email, answers.id, answers.github);
+      
+    } else{
+      const intern = new Intern(answers.Name, answers.email, answers.id, answers.school);
+      
+    }
+    askAgain(answers.enterAnother);
+    console.log(answers.enterAnother)
+    // output.push(answers);
+    // if(answers.enterAnother){
+    //   askEmployee()
+    // } else {output.join(', ')}
+    // console.log(intern)
   }    ) 
 }
 
-
-
-
+function askAgain (enterAnother){
+  if(enterAnother = true){
+    askEmployee()
+  } else
+  {console.log(manager)}
+}
 
 askManager();
+
 
 //   //This logs the answers
 //   .then((answers) => {
