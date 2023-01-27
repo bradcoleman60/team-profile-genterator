@@ -13,6 +13,8 @@ const Employee = require("./lib/employee");
 //This adds link to components.js file
 // var cp = require("./components");
 
+var teamArray = [];
+
 const managerQuestions = [
   {
     type: "input",
@@ -114,160 +116,136 @@ const employeeQuestions = [
 
 function askManager() {
   inquirer.prompt(managerQuestions).then((answers) => {
-    console.log(answers.Name);
-    console.log(Number(answers.id));
-    console.log(answers.email);
-    console.log(Number(answers.OfficeNum));
+    console.log(answers)
+     teamArray.push(new Manager(answers.Name, Number(answers.id), answers.email, Number(answers.OfficeNum)));
 
-    const manager = new Manager(
-      answers.Name,
-      Number(answers.id),
-      answers.email,
-      Number(answers.OfficeNum)
-    );
-    
-    if (answers.enterEmployee) {
+    if (answers.enterEmployee === true) {
       askEmployee();
-    }
+    } else console.log(teamArray);
   });
 }
 
 function askEmployee() {
   inquirer.prompt(employeeQuestions).then((answers) => {
-    console.log(answers.Name);
-    console.log(Number(answers.id));
-    console.log(answers.Email);
-    console.log(answers.Github);
-    console.log(answers.school);
     if (answers.engOrIntern === "Engineer") {
-      const engineer = new Engineer(
-        answers.Name,
-        Number(answers.id),
-        answers.Email,
-        answers.Github
-      );
+    
+      teamArray.push((new Engineer(answers.Name, Number(answers.id), answers.Email, answers.Github)));
     } else {
-      const intern = new Intern(
-        answers.Name,
-        Number(answers.id),
-        answers.Email,
-        answers.school
-      );
+      
+      teamArray.push((intern = new Intern(answers.Name, Number(answers.id), answers.Email, answers.school)));
     }
 
-    if (answers.enterAnother) {
-      askAgain();
+    if (answers.enterAnother === true) {
+      askEmployee(answers.enterAnother);
+    } else {
+      allTeamMembers(teamArray);
+      // console.log(teamArray);
     }
-    
   });
 }
 
-function askAgain(enterAnother) {
-  if (enterAnother === true) {
-    askEmployee();
-  } else {
-    console.log(Manager.name);
-    console.log(Engineer.name);
-    console.log(Intern.name);
-    console.log(Employee.email);
-  }
-}
+// function askAgain(enterAnother) {
+//   if (enterAnother === true) {
+//     askEmployee();
+//   } else {
+//     console.log(teamArray);
+//     for (i=0; i < teamArray.length; i++){
+//       console.log(teamArray);
+//       console.log(teamArray[i].getRole());
+// console.log(teamArray[i][0].id);
+// console.log(teamArray[i][0].name)
+// console.log(teamArray[i][0].name)
+// }
+
+// }
+// }
 
 askManager();
 
+var cards = []
+
+function allTeamMembers(teamArray) {
+  var card = ``;
+    var extra = "";
+    
+  teamArray.forEach((el) => {
+    
+    if (el.getRole() === "Manager") {
+       extra = `Office Number: ${el.getOfficeNumber()}`;
+    }
+    if (el.getRole() === "Engineer") {
+      extra = `GitHub: ${el.getGithub()}`;
+    }
+    if (el.getRole() === "Intern") {
+      extra = `School: ${el.getSchool()}`;
+    }
+        
+    cards.push(`<div class="card" style="width: 18rem;">
+    <div class="card-body bg-primary bg-gradient" style="--bs-bg-opacity: .75;">
+      <h5 class="card-title">${el.name}Card title</h5>
+      <h6 class="card-subtitle mb-2 text-muted">${el.getRole()}</h6>
+      <p class="card-text">ID#: ${el.id}</p>
+      <p class="card-text">Email: ${el.email}</p>
+      <p class="card-text">${extra}</p>
+      <a href="#" class="card-link">Card link</a>
+      <a href="#" class="card-link">Another link</a>
+    </div>
+    </div>`)
+  })
+    
+  
+  writeCards(cards);
+    
+}
+
+
+/*This function writes the readme document*/
+function writeCards(cards) {
+  var newCards = cards.reduce((acc, el) => {
+    return acc.concat(el)
+
+  });
+  createPage(newCards)
+  console.log(newCards)
+  // fs.writeFile("SAMPLE_CARD.html", cards, (err) => {
+  //   if (err) throw err;
+  //   console.log("The file is saved");
+  // });
+}
+
+function createPage (newCards){
+
+var page = `<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <title>Team Profile</title>
+  </head>
+  <body>
+    <h1>My Team Profile</h1>
+
+
+<div class="container-xxl">100% wide until extra extra large breakpoint
+    ${newCards}
+</div>
 
 
 
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+      <script src="./index.js"></script>
+  </body>
+</html>`
 
+fs.writeFile("index.html", page, (err) => {
+    if (err) throw err;
+    console.log("The file is saved")}
+    );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//   //This logs the answers
-//   .then((answers) => {
-//     //Using object destructuring made variables equal to the keys in the answer object
-//     const {
-//       title,
-//       author,
-//       email,
-//       github,
-//       description,
-//       license,
-//       installationSteps,
-//       installationSteps2,
-//       usage,
-//       contribution,
-//       testSteps,
-//     } = answers;
-
-//     //Deconstruct the installation steps to ensure that that only values are retrived
-//     var outputData2 = installationSteps2.map(Object.values);
-
-//     // Function used to create the installation steps that can be input into the template literal
-//     var installString = "";
-//     createInstallationString(outputData2);
-//     function createInstallationString(outputData2) {
-//       for (i = 0; i < outputData2.length; i++) {
-//         installString = installString + outputData2[i] + "\n";
-//       }
-//     }
-
-//     //Pass variables to the settestContent function
-//     settextContent(
-//       title,
-//       author,
-//       email,
-//       github,
-//       description,
-//       license,
-//       installationSteps,
-//       usage,
-//       contribution,
-//       testSteps,
-//       installString
-//     );
-//   });
-
-// /* This sets the content (via a template literal string) of the readme document*/
-// function settextContent(
-//   title,
-//   author,
-//   email,
-//   github,
-//   description,
-//   license,
-//   installationSteps,
-//   usage,
-//   contribution,
-//   testSteps,
-//   installString
-// ) {
-//   var theHtmlPage = `XXXXXXXXXXXXXX
-
-//   Please also check the GitHub Repositories at: https://github.com/${github}/`;
-
-//   writeReadme(theReadMe);
-// }
-
-// /*This function writes the readme document*/
-// function writeReadme(theReadMe) {
-//   fs.writeFile("SAMPLE_README.md", theReadMe, (err) => {
-//     if (err) throw err;
-//     console.log("The file is saved");
-//   });
-// }
+}
