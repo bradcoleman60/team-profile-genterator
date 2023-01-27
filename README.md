@@ -10,41 +10,82 @@
 
 # **Description**
 
-The goal of this project was to create a ReadMe.md generator using Node.js and the command line. This was my first project using Node.js and no html or css.   This required the use of a NPM package - inquirer.  Additionally, I used an additional NPM package - inquirer-loop which allowed me to loop my questions depending on user input.  
+The goal of this project was to create an index.html generator using Node.js and the command line.   This required the use of a NPM package - inquirer.    
 
-This project is executed solely in the command line interface so no HTML or CSS was used.  The ultimate output is a readme file.  
+This project is executed solely in the command line interface.  The ultimate output is an index.html file.  Additionally, this project required the used of Test Driven Development (TDD). I used an NPM package - Jest to execute a series of tests to ensure that code was then developed so that all tests passed.  
 
-Below is a screen shot of the command line interface at the completion of the questions. 
+Below is a screen shot of the sample index.html page and the screen shot of the tests that all passed. 
 
-![screenshot](screenshot.jpg)
+![screenshot](./assets/screen_shot.jpg)
+
+
+![screenshot](./assets/screenShot2.jpg)
 
 
 Link to Demonstration Video of how this Generator Works:
 
-https://app.vidcast.io/share/c6d1a746-76c3-4a06-bc24-f510ae42cf43
+https://app.vidcast.io/share/e9ce3bd3-5ee6-4b2d-9fee-15ca60460d03
+
 
 # **Highlighted Code Example**
 
-The following is code that I created that I would like to highlight.  This highlights the use the Node inquirer package.  
-
-This code handles the object array of all the answers that are asked in the command line.  Most notable is the use of object destructuring that occurs on the 5th line of the code below.  This is an short way of being able to reference the values by their variable names instead of the lengthier method of using dot notation.    
+The following is code that I created that I would like to highlight.  This highlights the use the Node inquirer package and two functions that allowed me to loop through the questions if additionally entries were desired by the manager.  
 
 ```
+/* This function initiates the prompts for the manager and after all questions are answered
+this function also adds the manager to the employee and manager objects*/
+function askManager() {
+  inquirer.prompt(managerQuestions).then((answers) => {
+    teamArray.push(
+      new Manager(
+        answers.Name,
+        Number(answers.id),
+        answers.email,
+        Number(answers.OfficeNum)
+      )
+    );
 
+    if (answers.enterEmployee === true) {
+      askEmployee();
+    } else {
+      allTeamMembers(teamArray);
+    }
+  });
+}
+
+/* This function initiates the prompts for the engineers and the interns and after all questions are answered
+this function also adds the manager to the employee and engineer/ intern objects*/
+function askEmployee() {
+  inquirer.prompt(employeeQuestions).then((answers) => {
+    if (answers.engOrIntern === "Engineer") {
+      teamArray.push(
+        new Engineer(
+          answers.Name,
+          Number(answers.id),
+          answers.Email,
+          answers.Github
+        )
+      );
+    } else {
+      teamArray.push(
+        (intern = new Intern(
+          answers.Name,
+          Number(answers.id),
+          answers.Email,
+          answers.school
+        ))
+      );
+    }
+
+    if (answers.enterAnother === true) {
+      askEmployee(answers.enterAnother);
+    } else {
+      allTeamMembers(teamArray);
+    }
+  });
+}
 
 ```
-The following code is how I ensured that a valid email address was input into the email prompt. 
-
-```
-
-
-```
-Lastly, I used a plug in to add for question looping.  This is the syntax that allows for looping questions.  In this instance, I wanted to ensure that the user could input as main installation steps as needed.  After an installation step is entered, the user is asked if they want to enter another step.  If so, the prompt to enter another step is rendered.  If not, the questions are ended.  
-
-```
-
-```
-
 
 
 # **Testing** 
@@ -53,14 +94,14 @@ To test to ensure the code rendered the desired output I iterated a series of te
 
 | User Acceptance Criteria | Test Result | 
 | ------------- |:-------------| 
-|1. WHEN I am prompted for my team members and their information THEN an HTML file is generated that displays a nicely formatted team roster based on user input   |**Completed**.  The     |
-|2. WHEN I click on an email address in the HTML THEN my default email program opens and populates the TO field of the email with the address   |**Completed**.  The     |
-|3. WHEN I click on the GitHub username THEN that GitHub profile opens in a new tab   |**Completed**.  The     |
-|4. WHEN I start the application THEN I am prompted to enter the team manager’s name, employee ID, email address, and office number   |**Completed**.  The     |
-|5. WHEN I enter the team manager’s name, employee ID, email address, and office number THEN I am presented with a menu with the option to add an engineer or an intern or to finish building my team   |**Completed**.  The     |
-|6. WHEN I select the engineer option THEN I am prompted to enter the engineer’s name, ID, email, and GitHub username, and I am taken back to the menu    |**Completed**.  The    |
-|7. WHEN I select the intern option THEN I am prompted to enter the intern’s name, ID, email, and school, and I am taken back to the menu   |**Completed**.  The     |
-|8.WHEN I decide to finish building my team THEN I exit the application, and the HTML is generated   |**Completed**.  The    |
+|1. WHEN I am prompted for my team members and their information THEN an HTML file is generated that displays a nicely formatted team roster based on user input   |**Completed**.  The file is created with the required data    |
+|2. WHEN I click on an email address in the HTML THEN my default email program opens and populates the TO field of the email with the address   |**Completed**.  The email links work     |
+|3. WHEN I click on the GitHub username THEN that GitHub profile opens in a new tab   |**Completed**.  The link to github works    |
+|4. WHEN I start the application THEN I am prompted to enter the team manager’s name, employee ID, email address, and office number   |**Completed**.  The  all prompts are included   |
+|5. WHEN I enter the team manager’s name, employee ID, email address, and office number THEN I am presented with a menu with the option to add an engineer or an intern or to finish building my team   |**Completed**.  The prompts allow the manager to enter an Engineer or and Intern or not to proceed.    |
+|6. WHEN I select the engineer option THEN I am prompted to enter the engineer’s name, ID, email, and GitHub username, and I am taken back to the menu    |**Completed**.  This functionality works.    |
+|7. WHEN I select the intern option THEN I am prompted to enter the intern’s name, ID, email, and school, and I am taken back to the menu   |**Completed**.  This functionality works.    |
+|8.WHEN I decide to finish building my team THEN I exit the application, and the HTML is generated   |**Completed**.  The index.html file is produced    |
 
 
 # **Technology Used and Credits**

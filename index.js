@@ -8,13 +8,12 @@ const inquirer = require("inquirer");
 const Manager = require("./lib/manager");
 const Engineer = require("./lib/engineer");
 const Intern = require("./lib/intern");
-const Employee = require("./lib/employee");
+// const Employee = require("./lib/employee");
 
-//This adds link to components.js file
-// var cp = require("./components");
-
+// Creates a array to hold the team members as they are entered
 var teamArray = [];
 
+// These are the questions to be asked of the Manager
 const managerQuestions = [
   {
     type: "input",
@@ -72,6 +71,7 @@ const managerQuestions = [
   },
 ];
 
+// These are the questions to be asked of the Engineer's or Interns
 const employeeQuestions = [
   {
     type: "list",
@@ -114,108 +114,108 @@ const employeeQuestions = [
   },
 ];
 
+/* This function initiates the prompts for the manager and after all questions are answered
+this function also adds the manager to the employee and manager objects*/
 function askManager() {
   inquirer.prompt(managerQuestions).then((answers) => {
-    console.log(answers)
-     teamArray.push(new Manager(answers.Name, Number(answers.id), answers.email, Number(answers.OfficeNum)));
+    teamArray.push(
+      new Manager(
+        answers.Name,
+        Number(answers.id),
+        answers.email,
+        Number(answers.OfficeNum)
+      )
+    );
 
     if (answers.enterEmployee === true) {
       askEmployee();
-    } else console.log(teamArray);
+    } else {
+      allTeamMembers(teamArray);
+    }
   });
 }
 
+/* This function initiates the prompts for the engineers and the interns and after all questions are answered
+this function also adds the manager to the employee and engineer/ intern objects*/
 function askEmployee() {
   inquirer.prompt(employeeQuestions).then((answers) => {
     if (answers.engOrIntern === "Engineer") {
-    
-      teamArray.push((new Engineer(answers.Name, Number(answers.id), answers.Email, answers.Github)));
+      teamArray.push(
+        new Engineer(
+          answers.Name,
+          Number(answers.id),
+          answers.Email,
+          answers.Github
+        )
+      );
     } else {
-      
-      teamArray.push((intern = new Intern(answers.Name, Number(answers.id), answers.Email, answers.school)));
+      teamArray.push(
+        (intern = new Intern(
+          answers.Name,
+          Number(answers.id),
+          answers.Email,
+          answers.school
+        ))
+      );
     }
 
     if (answers.enterAnother === true) {
       askEmployee(answers.enterAnother);
     } else {
       allTeamMembers(teamArray);
-      // console.log(teamArray);
     }
   });
 }
 
-// function askAgain(enterAnother) {
-//   if (enterAnother === true) {
-//     askEmployee();
-//   } else {
-//     console.log(teamArray);
-//     for (i=0; i < teamArray.length; i++){
-//       console.log(teamArray);
-//       console.log(teamArray[i].getRole());
-// console.log(teamArray[i][0].id);
-// console.log(teamArray[i][0].name)
-// console.log(teamArray[i][0].name)
-// }
-
-// }
-// }
-
+//This initiates the questions when "node index.js" is entered into the command line
 askManager();
 
-var cards = []
+//This creates an empty array of cards
+var cards = [];
 
+/* This function aggregates all team members and uses a forEach loop to create a template 
+literal of html that creates the cards for each employees that will be displayed on index.html*/
 function allTeamMembers(teamArray) {
-  var card = ``;
-    var extra = "";
-    
+  var extra = "";
+
   teamArray.forEach((el) => {
-    
     if (el.getRole() === "Manager") {
-       extra = `Office Number: ${el.getOfficeNumber()}`;
+      extra = `<p class="card-text">Office Number: ${el.getOfficeNumber()}</p>`;
     }
     if (el.getRole() === "Engineer") {
-      extra = `GitHub: ${el.getGithub()}`;
+      extra = `<a href="https://github.com/${el.getGithub()}" class="card-link">GitHub</a>`;
     }
     if (el.getRole() === "Intern") {
-      extra = `School: ${el.getSchool()}`;
+      extra = `<p class="card-text">School: ${el.getSchool()}</p>`;
     }
-        
-    cards.push(`<div class="card" style="width: 18rem;">
+
+    cards.push(`<div class="card mx-auto" style="width: 18rem;">
     <div class="card-body bg-primary bg-gradient" style="--bs-bg-opacity: .75;">
-      <h5 class="card-title">${el.name}Card title</h5>
+      <h5 class="card-title">${el.name}</h5>
       <h6 class="card-subtitle mb-2 text-muted">${el.getRole()}</h6>
       <p class="card-text">ID#: ${el.id}</p>
       <p class="card-text">Email: ${el.email}</p>
-      <p class="card-text">${extra}</p>
-      <a href="#" class="card-link">Card link</a>
-      <a href="#" class="card-link">Another link</a>
+      ${extra}
+      <a href="mailto:${el.email}" class="card-link">Email</a>
     </div>
-    </div>`)
-  })
-    
-  
+    </div>`);
+  });
+
   writeCards(cards);
-    
 }
 
-
-/*This function writes the readme document*/
+/*This function creates the cards and is needed to convert the array of cards to a single string
+using the reduce method*/
 function writeCards(cards) {
   var newCards = cards.reduce((acc, el) => {
-    return acc.concat(el)
-
+    return acc.concat(el);
   });
-  createPage(newCards)
-  console.log(newCards)
-  // fs.writeFile("SAMPLE_CARD.html", cards, (err) => {
-  //   if (err) throw err;
-  //   console.log("The file is saved");
-  // });
+  createPage(newCards);
 }
 
-function createPage (newCards){
-
-var page = `<!doctype html>
+/* This function creates the index.html page*/
+function createPage(newCards) {
+  var page = `<!doctype html>
 <html lang="en">
   <head>
     <!-- Required meta tags -->
@@ -228,24 +228,24 @@ var page = `<!doctype html>
     <title>Team Profile</title>
   </head>
   <body>
-    <h1>My Team Profile</h1>
-
-
-<div class="container-xxl">100% wide until extra extra large breakpoint
-    ${newCards}
+  <div class ="bg-danger">
+    <h1><center>My Team Profile</center></h1>
 </div>
 
-
+<div class="container-xxl">
+<div class="row">
+    ${newCards}
+    </div>
+</div>
 
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
       <script src="./index.js"></script>
   </body>
-</html>`
+</html>`;
 
-fs.writeFile("index.html", page, (err) => {
+  fs.writeFile("./dist/index.html", page, (err) => {
     if (err) throw err;
-    console.log("The file is saved")}
-    );
-
+    console.log("The file is saved");
+  });
 }
